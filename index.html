@@ -1,0 +1,52 @@
+<!-- void handleRoot(AsyncWebServerRequest *request) {
+    String content = R"rawliteral( -->
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Hora LIVE</title>
+  </head>
+  <body>
+    <p>Fecha: <span id='fecha'></span></p>
+    <p>Hora: <span id='hora'></span></p>
+    <p>Ajustar hora (HH:MM:SS): 
+      <input type="text" id="targetTime"/>
+      <button onclick="setTargetTime()">Set</button></p>
+    <script>
+      var gateway = `ws://${window.location.hostname}/ws`;
+      var websocket;
+      function initWebSocket() {
+        console.log('Trying to open a WebSocket connection...');
+        websocket = new WebSocket(gateway);
+        websocket.onopen    = onOpen;
+        websocket.onclose   = onClose;
+        websocket.onmessage = onMessage;
+      }
+      function onOpen(event) {
+        console.log('Connection opened');
+        websocket.send('toggle');
+      }
+      function onClose(event) {
+        console.log('Connection closed');
+        setTimeout(initWebSocket, 2000);
+      }
+      function onMessage(event) {
+        var date = new Date();
+        document.getElementById('fecha').innerHTML = date.toLocaleDateString();
+        document.getElementById('hora').innerHTML = event.data;
+      }
+      function setTargetTime(){
+        var targetTime = document.getElementById('targetTime').value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/set-time", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("time=" + targetTime);
+      }
+      window.onload = function(event) {
+        initWebSocket();
+      }
+    </script>
+  </body>
+  </html>
+  <!-- )rawliteral";
+    request->send(200, "text/html", content);
+  } -->
