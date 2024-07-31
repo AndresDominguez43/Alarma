@@ -4,8 +4,6 @@
 
 const char* ssid = "Internet_Services_1418";
 const char* password = "meia242113";
-
-AsyncWebServer server(80);
 extern String targetTime;
 
 void configWiFi() {
@@ -15,10 +13,9 @@ void configWiFi() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
-  Serial.println(WiFi.localIP());
 }
 
-void setupMDNS() {
+void configMDNS() {
   if (!MDNS.begin("Alarma")) {  // http://alarma.local
     Serial.println("Error setting up MDNS responder!");
   } else {
