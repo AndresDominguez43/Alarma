@@ -4,15 +4,14 @@
 #include <manejoAlarma.h>
 #include <LittleFS.h>
 
-const char *filename = "index.html";
 
 void setup(){
   Serial.begin(115200);
   delay(3000);
-  
+
   LittleFS.begin();
 
-  File file = LittleFS.open(filename, "r");
+  File file = LittleFS.open("index.html", "r");
 
   if (!file) {
     Serial.println("could not open file for reading");
