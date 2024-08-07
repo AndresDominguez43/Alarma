@@ -7,15 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/reset.css" />
     <link rel="stylesheet" href="/style.css" />
-    <script src="script.js" defer></script>
+    <script src="/script.js" defer></script>
     <title>Alarma</title>
 </head>
 
 <body>
-    <p>Fecha: <span id='fecha'></span></p>
-    <p>Hora: <span id='hora'></span></p>
-    <p>Ajustar hora (HH:MM:SS): 
-    <input type="text" id="targetTime"/>
+    <h1 class="header"> PROYECTO DE SISTEMAS </h1>
+    <p>fecha
+        <span id='fecha'></span></p>
+    <p>hora
+        <span id='hora'></span></p>
+    <p>Alarma 
+    <input type="text" id="targetTime" placeholder="HH:MM..."class="handleSetTime"/>
     <button onclick="setTargetTime()">Set</button></p>
     
 <main>

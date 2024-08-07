@@ -5,19 +5,25 @@
     --bg-color: #7c4939;
     --bg-color1: #be7c31;
     --text-color: #77ecc5;
-
+    --text-color1: #000000;
     font-size: 18px;
 }  
-
+.header{
+    color: var(--text-color);
+    margin-bottom: 3rem;
+    font-size: 2rem;
+    padding: 10px;
+    text-align: center;
+}
 body {
     font-family: 'Lato', sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-color);
+    
 }
-
+/* 
 a {
     color: var(--text-color)
-}
+} */
 
 p {
     margin-bottom: 0.75rem;

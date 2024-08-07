@@ -56,7 +56,7 @@ function updateImageIcon(description){
   let src = 'https://cdn-icons-png.freepik.com/256/6968/6968724.png';
   if(description.includes('sol')){
     src = 'https://cdn-icons-png.freepik.com/256/6968/6968724.png';
-  }else if(description.includes('nubes')|| description.includes('nublado') || description.includes('niebla')){
+  }else if(description.includes('nubes')|| description.includes('nublado') || description.includes('niebla') || description.includes('nuboso')){
     src = 'https://cdn-icons-png.freepik.com/256/1116/1116486.png';
   }else if(description.includes('lluvia')){
     src = 'https://cdn-icons-png.freepik.com/256/6236/6236336.png';
