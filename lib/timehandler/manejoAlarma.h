@@ -6,6 +6,7 @@
 
 extern NTPClient timeClient;
 extern String targetTime;
+
 void startTimeClient();
 void updateTime();
 void checkAlarms();
