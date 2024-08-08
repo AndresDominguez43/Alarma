@@ -3,7 +3,7 @@
 }
 :root {
     --bg-color: #7c4939;
-    --bg-color1: #be7c31;
+    --bg-color1: #ffffff;
     --text-color: #77ecc5;
     --text-color1: #000000;
     font-size: 18px;
@@ -15,15 +15,20 @@
     padding: 10px;
     text-align: center;
 }
+
+.handleSetTime{
+    padding: 10px 10px;
+    border: none;
+    background-color: var(--text-color);
+    max-width: 200px;
+    margin: 0px auto;
+    border-radius: 3px;
+}
 body {
     font-family: 'Lato', sans-serif;
     background-color: var(--bg-color);
     
 }
-/* 
-a {
-    color: var(--text-color)
-} */
 
 p {
     margin-bottom: 0.75rem;
@@ -87,13 +92,27 @@ p {
     flex-wrap: nowrap;
 }
 
+.humidityImg{
+    margin-left: 3rem;
+    margin-right: 0.3rem;
+    width: 10px;
+    height: 10px;
+}
+.humidity{
+    display: flex;
+    flex-direction: line;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
 .infoWeather{
 display: flex;
 align-items: center;
 justify-content: center;
 font-size: 1.1rem;
 margin-bottom: 0.4rem;
-margin-top: 0.2rem;
+margin-top: 0.1rem;
 
 }
 

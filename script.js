@@ -1,7 +1,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
-
+//---------------DESCOMENTAR SI SE CARGA EN EL ESP,SE COMENTO PARA PROBAR CON EL LIVESERVER ---- //
 // function initWebSocket() {
 //   console.log('Trying to open a WebSocket connection...');
 //   websocket = new WebSocket(gateway);
@@ -48,8 +48,10 @@ const city = document.getElementById('city');
 const tempImg = document.getElementById('temp-img');
 const weatherImg = document.getElementById('info-Wth');
 const temp = document.getElementById('temp');
+const hum = document.getElementById('hum');
 const weather = document.getElementById('weather');
 const range = document.getElementById('range');
+
 
 
 function updateImageIcon(description){
@@ -94,14 +96,17 @@ async function search(query) {
   card.style.display = 'block';
   city.innerHTML = `${data.name}, ${data.sys.country}`;   
   temp.innerHTML = `${toCelsius(data.main.temp)}&deg;C`;
+  hum.innerHTML = `${data.main.humidity}%`;
+  
   weather.innerHTML = description;
   range.innerHTML = `Minima: ${toCelsius(data.main.temp_min)} &deg;C/Maxima: ${toCelsius(data.main.temp_max)} &deg;C`;
   
-  updateBackgroundImage(description);  //data.weather[0].
+  updateBackgroundImage(description); 
   updateImageIcon(description);
   } catch (err) {
   console.log(err);
-  alert('Hubo un error');
+  alert('No se encontro el lugar buscado');
+
   }
 }
 
