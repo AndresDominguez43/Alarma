@@ -2,41 +2,41 @@ var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
 //---------------DESCOMENTAR SI SE CARGA EN EL ESP,SE COMENTO PARA PROBAR CON EL LIVESERVER ---- //
-// function initWebSocket() {
-//   console.log('Trying to open a WebSocket connection...');
-//   websocket = new WebSocket(gateway);
-//   websocket.onopen = onOpen;
-//   websocket.onclose = onClose;
-//   websocket.onmessage = onMessage;
-// }
+function initWebSocket() {
+  console.log('Trying to open a WebSocket connection...');
+  websocket = new WebSocket(gateway);
+  websocket.onopen = onOpen;
+  websocket.onclose = onClose;
+  websocket.onmessage = onMessage;
+}
 
-// function onOpen(event) {
-//   console.log('Connection opened');
-//   websocket.send('toggle');
-// }
+function onOpen(event) {
+  console.log('Connection opened');
+  websocket.send('toggle');
+}
 
-// function onClose(event) {
-//   console.log('Connection closed');
-//   setTimeout(initWebSocket, 2000);
-// }
+function onClose(event) {
+  console.log('Connection closed');
+  setTimeout(initWebSocket, 2000);
+}
 
-// function onMessage(event) {
-//   var date = new Date();
-//   document.getElementById('fecha').innerHTML = date.toLocaleDateString();
-//   document.getElementById('hora').innerHTML = event.data;
-// }
+function onMessage(event) {
+  var date = new Date();
+  document.getElementById('fecha').innerHTML = date.toLocaleDateString();
+  document.getElementById('hora').innerHTML = event.data;
+}
 
-// function setTargetTime() {
-//   var targetTime = document.getElementById('targetTime').value;
-//   var xhttp = new XMLHttpRequest();
-//   xhttp.open("POST", "/set-time", true);
-//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//   xhttp.send("time=" + targetTime);
-// }
+function setTargetTime() {
+  var targetTime = document.getElementById('targetTime').value;
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/set-time", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("time=" + targetTime);
+}
 
-// window.onload = function(event) {
-//   initWebSocket();
-// }
+window.onload = function(event) {
+  initWebSocket();
+}
 
 const api = {
   key: '965af2672919c9a96bec53314dd4f4fd',
