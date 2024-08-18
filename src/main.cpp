@@ -1,19 +1,10 @@
 #include <WiFi.h>
 #include <AsyncTCP.h> //Websocket
 #include <ESPAsyncWebServer.h> //WebSocket
-#include <NTPClient.h>  //
-#include <WiFiUdp.h>
-#include <ESPmDNS.h>
 #include <SPIFFS.h>
-
-// const char* ssid = "Internet_Services_1418";
-// const char* password = "meia242113";
-
-  const char* ssid = "Personal-E60-2.4GHz";
-  const char* password = "8E786ABE60";
-
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", -10800); // UTC-3 timezone
+#include "ConfigWiFi.h"
+#include "DNS.h"
+#include "Alarm.h"
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -56,9 +47,6 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
-bool ledState = 0;
-const int lightPin = 2;
-String targetTime = "00:00";
 
 void handleSetTime(AsyncWebServerRequest *request) {
   if (request->hasParam("time", true)) {
@@ -69,31 +57,11 @@ void handleSetTime(AsyncWebServerRequest *request) {
     request->send(400, "text/plain", "Time parameter missing");
   }
 }
-
-void setup() {
-  Serial.begin(115200);
-
-  pinMode(lightPin, OUTPUT);
-  digitalWrite(lightPin, LOW);
-
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
-  }
-
-  if (!MDNS.begin("Alarma")) {  // http://alarma.local
-    Serial.println("Error setting up MDNS responder!");
-  } else {
-    Serial.println("mDNS responder started");
-    Serial.println("URL: http://Alarma.local ");
-  }
-
-  if(!SPIFFS.begin(true)){
+void WebArchiveSPIFFS(){
+if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
-  
   File file = SPIFFS.open("/index.html");
   if(!file){
     Serial.println("Failed to open file for reading");
@@ -110,6 +78,14 @@ void setup() {
   server.on("/style.css", HTTP_GET,[](AsyncWebServerRequest *request){
     request->send(SPIFFS,"/style.css","text/css");
   });
+  
+}
+void setup() {
+  Serial.begin(115200);
+  ConfigPin();
+  initWiFi();
+  DNS();
+  WebArchiveSPIFFS();
   server.on("/set-time", HTTP_POST, handleSetTime);
 
   initWebSocket();
@@ -120,14 +96,9 @@ void setup() {
 void loop() {
   ws.cleanupClients();
   timeClient.update();
-  String currentTime = timeClient.getFormattedTime();
-
-  if (targetTime != "" && currentTime == targetTime) {
-    digitalWrite(lightPin, HIGH);
-  } else {
-    digitalWrite(lightPin, LOW);
-  }
-  
+  Alarm();
   notifyClients();
   delay(1000); 
 }
+
+
