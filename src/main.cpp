@@ -1,5 +1,5 @@
 #include "ConfigWiFi.h"
-#include "DNS.h"
+#include "dns.h"
 #include "Alarm.h"
 #include "WebSocket.h"
 #include "WebSPIFFS.h"
@@ -12,7 +12,7 @@ void setup() {
 
   initWiFi();
 
-  DNS();
+  setupDNS();
 
   WebArchiveSPIFFS();
 

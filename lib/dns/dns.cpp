@@ -1,11 +1,11 @@
 #include "dns.h"
 
+const char* DOMAIN_NAME = "ServidorESP";
 
-void DNS(){
-    if (!MDNS.begin("Alarma")) {  // http://alarma.local
-        Serial.println("Error setting up MDNS responder!");
-    } else {
-        Serial.println("mDNS responder started");
-        Serial.println("URL: http://Alarma.local ");
+void setupDNS() {
+    if(!MDNS.begin(DOMAIN_NAME)){
+        Serial.println("Error MDNS");
+    }else {
+        Serial.println("Start DNS: http://" + String(DOMAIN_NAME)+ ".local");
     }
 }
