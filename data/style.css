@@ -1,6 +1,27 @@
 * {
     font-family: 'Lato', sans-serif;
 }
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    height: 80vh;
+    width: 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+}
+.left, .right {
+    display: 1;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.left {
+    border-right: 2px solid #E0FFF7;
+}
+
+.right {
+    padding-left: 20px;
+}
 :root {
     --bg-color: #574747;
     --bg-color1: #ffffff;
@@ -27,7 +48,6 @@
 body {
     font-family: 'Lato', sans-serif;
     background-color: var(--bg-color);
-    
 }
 
 p {

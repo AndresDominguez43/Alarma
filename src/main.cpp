@@ -7,17 +7,11 @@
 
 void setup() {
   Serial.begin(115200);
-
   ConfigPin();
-
   initWiFi();
-
   setupDNS();
-
   WebArchiveSPIFFS();
-
   initWebSocket();
-
   server.begin();
   timeClient.begin();
 }
