@@ -1,5 +1,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
+var audioContext;
+var alarmAudioBuffer;
 
 function initWebSocket() {
   console.log('Trying to open a WebSocket connection...');
@@ -9,8 +11,16 @@ function initWebSocket() {
 
 function onMessage(event) {
   var date = new Date();
-  document.getElementById('fecha').innerHTML = date.toLocaleDateString();
-  document.getElementById('hora').innerHTML = event.data;
+  if (event.data !== 'ALARM' && event.data !== 'STOP_ALARM'){
+    document.getElementById('fecha').innerHTML = date.toLocaleDateString();
+    document.getElementById('hora').innerHTML = event.data;
+  }
+    if (event.data === 'ALARM') {
+      playAlarmSound();
+    } else if (event.data === 'STOP_ALARM') {
+      stopAlarmSound();
+    }
+  
 }
 
 function setTargetTime() {
@@ -25,6 +35,47 @@ window.onload = function(event) {
   initWebSocket();
 }
 
+function playAlarmSound() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (!alarmAudioBuffer) {
+    fetch('/ringtone.mp3')
+      .then(response => response.arrayBuffer())
+      .then(data => audioContext.decodeAudioData(data))
+      .then(buffer => {
+        alarmAudioBuffer = buffer;
+        playBuffer();
+      })
+      .catch(error => console.error('Error al cargar el audio:', error));
+  } else {
+    playBuffer();
+  }
+}
+
+function playBuffer() {
+  const source = audioContext.createBufferSource();
+  source.buffer = alarmAudioBuffer;
+  source.loop = true;
+  source.connect(audioContext.destination);
+  source.start();
+}
+
+function stopAlarmSound() {
+  if (audioContext) {
+    audioContext.close().catch(error => console.error('Error al detener el audio:', error));
+    audioContext = null;
+    alarmAudioBuffer = null;
+  }
+}
+function stopAlarm() {
+  fetch('/stopAlarm', { method: 'POST' })
+      .then(response => response.text())
+      .then(data => console.log(data));
+}
+
+
 const api = {
   key: '965af2672919c9a96bec53314dd4f4fd',
   url: `https://api.openweathermap.org/data/2.5/weather`
@@ -37,7 +88,7 @@ const weatherImg = document.getElementById('info-Wth');
 const temp = document.getElementById('temp');
 const hum = document.getElementById('hum');
 const weather = document.getElementById('weather');
-const range = document.getElementById('range');
+const feelsL = document.getElementById('feels-like');
 
 
 
@@ -73,7 +124,22 @@ function updateBackgroundImage(description) {
   card.style.backgroundPosition = 'center';
   card.style.backgroundRepeat = 'no-repeat';
 }
+function updateTextColor(description) {
+  let textColor = '#383737'; // Color de texto por defecto (gris)
 
+  if (description.includes('nublado') || description.includes('lluvia') || description.includes('tormenta') || description.includes('niebla')) {
+    textColor = '#fff'; // Texto blanco para fondos oscuros
+  } else if (description.includes('cielo claro') || description.includes('soleado')) {
+    textColor = '#383737'; // Texto negro para fondos claros
+  }
+
+  // Aplicar el color de texto a los elementos deseados
+  city.style.color = textColor;
+  temp.style.color = textColor;
+  hum.style.color = textColor;
+  weather.style.color = textColor;
+  feelsL.style.color = textColor;
+}
 async function search(query) {
   try {
   const response = await fetch(`${api.url}?q=${query}&appid=${api.key}&lang=es`);
@@ -86,10 +152,12 @@ async function search(query) {
   hum.innerHTML = `${data.main.humidity}%`;
   
   weather.innerHTML = description;
-  range.innerHTML = `Minima: ${toCelsius(data.main.temp_min)} &deg;C/Maxima: ${toCelsius(data.main.temp_max)} &deg;C`;
+  feelsL.innerHTML = `ST: ${toCelsius(data.main.feels_like)} &deg;C`;
   
   updateBackgroundImage(description); 
   updateImageIcon(description);
+  updateTextColor(description);
+  
   } catch (err) {
   console.log(err);
   alert('No se encontro el lugar buscado');
@@ -98,7 +166,7 @@ async function search(query) {
 }
 
 function toCelsius(kelvin) {
-  return Math.round(kelvin - 273.15);
+  return Math.round(kelvin - 273.15).toFixed(1);
 }
 
 function onSubmit(event) {
@@ -108,3 +176,4 @@ function onSubmit(event) {
 const searchform = document.getElementById('search-form');
 const searchbox = document.getElementById('searchbox');
 searchform.addEventListener('submit', onSubmit, true);
+

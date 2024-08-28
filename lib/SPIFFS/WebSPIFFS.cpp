@@ -1,5 +1,5 @@
 #include "WebSPIFFS.h"
-
+#include "Alarm.h"
 void WebArchiveSPIFFS(){
 if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
@@ -22,4 +22,8 @@ if(!SPIFFS.begin(true)){
     request->send(SPIFFS,"/style.css","text/css");
   });
   server.on("/set-time", HTTP_POST, handleSetTime);
+  server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
+ server.on("/alarm.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
+  });
 }

@@ -3,6 +3,7 @@
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -10800); // UTC-3 timezone
 String targetTime = "00:00";
+bool alarmActive = false; // Estado de la alarma
 
 
 void ConfigPin(){
@@ -14,11 +15,17 @@ void Alarm(){
   String currentTime = timeClient.getFormattedTime();
   if (targetTime != "" && currentTime == targetTime) {
     digitalWrite(LIGHTPIN, HIGH);
-  } else {
-    digitalWrite(LIGHTPIN, LOW);
+    alarmActive = true; // Alarma activa cuando llega la hora
+    ws.textAll("ALARM"); // Enviar señal de alarma a través de WebSocket
   }
 }
 
+void handleStopAlarm(AsyncWebServerRequest *request) {
+  alarmActive = false; // Apagar la alarma
+  digitalWrite(LIGHTPIN, LOW);
+  ws.textAll("STOP_ALARM"); // Enviar señal para detener la alarma a través de WebSocket
+  request->send(200, "text/plain", "Alarm stopped");
+}
 
 void handleSetTime(AsyncWebServerRequest *request) {
   if (request->hasParam("time", true)) {

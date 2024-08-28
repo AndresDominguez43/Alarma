@@ -13,5 +13,5 @@ const int LIGHTPIN = 2;
 void ConfigPin();
 void Alarm();
 void handleSetTime(AsyncWebServerRequest *request);
-
+void handleStopAlarm(AsyncWebServerRequest *request);
 #endif

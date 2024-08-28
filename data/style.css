@@ -1,6 +1,31 @@
 * {
     font-family: 'Lato', sans-serif;
 }
+.main-container {
+    display: flex;
+    justify-content: center;
+    height: 80vh;
+    width: 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+
+}
+.left, .right {
+    display: flow;
+    padding: 1rem;
+    box-sizing: unset;
+}
+
+.left {
+    margin-left: 1rem;
+    border: 4rem solid var(--bg-color);
+}
+.right {
+    padding-left: 20px;
+    text-align: center;
+}
+
+
 :root {
     --bg-color: #574747;
     --bg-color1: #ffffff;
@@ -27,7 +52,6 @@
 body {
     font-family: 'Lato', sans-serif;
     background-color: var(--bg-color);
-    
 }
 
 p {
@@ -88,7 +112,7 @@ p {
     flex-direction: line;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.2rem;
     flex-wrap: nowrap;
 }
 
@@ -120,9 +144,8 @@ margin-top: 0.1rem;
     font-size: 1.4rem;
 }
 
-.range{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.feels-like{
+    margin-right: 3.3rem;
     font-size:  0.8rem;
+    margin-bottom: 0.5rem;
 }

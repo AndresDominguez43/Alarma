@@ -17,7 +17,6 @@ void setup() {
   WebArchiveSPIFFS();
 
   initWebSocket();
-
   server.begin();
   timeClient.begin();
 }
