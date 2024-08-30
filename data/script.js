@@ -23,6 +23,48 @@ function onMessage(event) {
   
 }
 
+document.getElementById('repetitiveBtn').addEventListener('click', function() {
+  var menu = document.getElementById('repetitiveAlarm');
+  if (menu.style.display === "none") {
+      menu.style.display = "block";
+  } else {
+      menu.style.display = "none";
+  }
+});
+
+document.getElementById('durationBtn').addEventListener('click', function() {
+  var menu = document.getElementById('durationAlarm');
+  if (menu.style.display === "none") {
+      menu.style.display = "block";
+  } else {
+      menu.style.display = "none";
+  }
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  // Obtener elementos del DOM
+  const popup = document.getElementById('popup');
+  const openPopupBtn = document.getElementById('openPopupBtn');
+  const closeBtn = document.querySelector('.close-btn');
+
+  // Abrir el popup al hacer clic en el botón
+  openPopupBtn.addEventListener('click', () => {
+      popup.style.display = 'block';
+  });
+
+  // Cerrar el popup al hacer clic en el botón de cerrar
+  closeBtn.addEventListener('click', () => {
+      popup.style.display = 'none';
+  });
+
+  // Cerrar el popup si se hace clic fuera del contenido del popup
+  window.addEventListener('click', (event) => {
+      if (event.target == popup) {
+          popup.style.display = 'none';
+      }
+  });
+});
+
 function setTargetTime() {
   var targetTime = document.getElementById('targetTime').value;
   var xhttp = new XMLHttpRequest();

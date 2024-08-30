@@ -1,5 +1,7 @@
 #include "WebSPIFFS.h"
 #include "Alarm.h"
+
+
 void WebArchiveSPIFFS(){
 if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
@@ -24,6 +26,14 @@ if(!SPIFFS.begin(true)){
   server.on("/set-time", HTTP_POST, handleSetTime);
   server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
  server.on("/alarm.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
+    if(!SPIFFS.exists("/ringtone.mp3")){
+      return;
+        request->send(404, "text/plain", "Archivo no encontrado");
+    
+    }
+      request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
   });
+server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/favicon.ico", "image/x-icon"); 
+});
 }

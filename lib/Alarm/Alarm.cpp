@@ -12,7 +12,7 @@ void ConfigPin(){
 }
 
 void Alarm(){
-  String currentTime = timeClient.getFormattedTime();
+  String currentTime = timeClient.getFormattedTime().substring(0,5);
   if (targetTime != "" && currentTime == targetTime) {
     digitalWrite(LIGHTPIN, HIGH);
     alarmActive = true; // Alarma activa cuando llega la hora
