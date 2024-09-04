@@ -15,14 +15,14 @@ function onMessage(event) {
     document.getElementById('fecha').innerHTML = date.toLocaleDateString();
     document.getElementById('hora').innerHTML = event.data;
   }
-    if (event.data === 'ALARM') {
-      playAlarmSound();
-    } else if (event.data === 'STOP_ALARM') {
-      stopAlarmSound();
-    }
+    // if (event.data === 'ALARM') {
+    //   playAlarmSound();
+    // } else if (event.data === 'STOP_ALARM') {
+    //   stopAlarmSound();
+    // }
   
 }
-
+//esto son los popup de los botones repetitivo y duracion
 document.getElementById('repetitiveBtn').addEventListener('click', function() {
   var menu = document.getElementById('repetitiveAlarm');
   if (menu.style.display === "none") {
@@ -40,6 +40,16 @@ document.getElementById('durationBtn').addEventListener('click', function() {
       menu.style.display = "none";
   }
 });
+
+document.getElementById('intervalBtn').addEventListener('click', function() {
+  var menu = document.getElementById('durationInterval');
+  if (menu.style.display === "none") {
+      menu.style.display = "block";
+  } else {
+      menu.style.display = "none";
+  }
+});
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
   // Obtener elementos del DOM
@@ -73,44 +83,71 @@ function setTargetTime() {
   xhttp.send("time=" + targetTime);
 }
 
+function sendAlarmDuration() {
+  var durationValue = document.getElementById('durationTime').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
+  xhr.send();
+}
+function sendAlarmRepetitive() {
+  var repetitiveValue = document.getElementById('repeatCount').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/setAlarmRepeat?repeat=" + repetitiveValue, true);
+  xhr.send();
+}
+
+function sendAlarmInterval() {
+  var intervalValue = document.getElementById('durationRepeatInterval').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/setAlarmInterval?interval=" + intervalValue, true);
+  xhr.send();
+}
+
+function setConfigAlarm(){
+  setTargetTime();
+  sendAlarmDuration();
+  sendAlarmRepetitive();
+  sendAlarmInterval();
+}
+
 window.onload = function(event) {
   initWebSocket();
 }
 
-function playAlarmSound() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
+// function playAlarmSound() {
+//   if (!audioContext) {
+//     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//   }
 
-  if (!alarmAudioBuffer) {
-    fetch('/ringtone.mp3')
-      .then(response => response.arrayBuffer())
-      .then(data => audioContext.decodeAudioData(data))
-      .then(buffer => {
-        alarmAudioBuffer = buffer;
-        playBuffer();
-      })
-      .catch(error => console.error('Error al cargar el audio:', error));
-  } else {
-    playBuffer();
-  }
-}
+//   if (!alarmAudioBuffer) {
+//     fetch('/ringtone.mp3')
+//       .then(response => response.arrayBuffer())
+//       .then(data => audioContext.decodeAudioData(data))
+//       .then(buffer => {
+//         alarmAudioBuffer = buffer;
+//         playBuffer();
+//       })
+//       .catch(error => console.error('Error al cargar el audio:', error));
+//   } else {
+//     playBuffer();
+//   }
+// }
 
-function playBuffer() {
-  const source = audioContext.createBufferSource();
-  source.buffer = alarmAudioBuffer;
-  source.loop = true;
-  source.connect(audioContext.destination);
-  source.start();
-}
+// function playBuffer() {
+//   const source = audioContext.createBufferSource();
+//   source.buffer = alarmAudioBuffer;
+//   source.loop = true;
+//   source.connect(audioContext.destination);
+//   source.start();
+// }
 
-function stopAlarmSound() {
-  if (audioContext) {
-    audioContext.close().catch(error => console.error('Error al detener el audio:', error));
-    audioContext = null;
-    alarmAudioBuffer = null;
-  }
-}
+// function stopAlarmSound() {
+//   if (audioContext) {
+//     audioContext.close().catch(error => console.error('Error al detener el audio:', error));
+//     audioContext = null;
+//     alarmAudioBuffer = null;
+//   }
+// }
 function stopAlarm() {
   fetch('/stopAlarm', { method: 'POST' })
       .then(response => response.text())
