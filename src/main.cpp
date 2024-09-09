@@ -3,12 +3,9 @@
 #include "Alarm.h"
 #include "WebSocket.h"
 #include "WebSPIFFS.h"
-#include "Lampara.h"
 
-Lampara Lampara1(25);
 
 void setup() {
-
   Serial.begin(115200);
 
   ConfigPin();
@@ -30,15 +27,7 @@ void loop() {
   String currentTime = timeClient.getFormattedTime();
   Alarm();
   notifyClients();
-  delay(10); 
-  
-
-  if (alarmActive){
-     Lampara1.encender();
-  } else {
-     Lampara1.apagar();
-  }
-
+  delay(1000); 
 }
 
 
