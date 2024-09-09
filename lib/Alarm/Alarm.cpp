@@ -3,8 +3,11 @@
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -10800); // UTC-3 timezone
 String targetTime = "00:00";
-bool alarmActive = false; // Estado de la alarma
 
+bool alarmActive = false; // Estado de la alarma
+unsigned long alarmStartTime = 0;
+unsigned long alarmDurationMillis = 0;
+unsigned long durationAlarmMillis = 0;
 
 void ConfigPin(){
     pinMode(LIGHTPIN, OUTPUT);
@@ -13,12 +16,23 @@ void ConfigPin(){
 
 void Alarm(){
   String currentTime = timeClient.getFormattedTime().substring(0,5);
-  if (targetTime != "" && currentTime == targetTime) {
-    digitalWrite(LIGHTPIN, HIGH);
-    alarmActive = true; // Alarma activa cuando llega la hora
-    ws.textAll("ALARM"); // Enviar señal de alarma a través de WebSocket
+  
+  int targetHour = targetTime.substring(0, 2).toInt();
+  int targetMinute = targetTime.substring(3, 5).toInt();
+
+  int currentHour = currentTime.substring(0, 2).toInt();
+  int currentMinute = currentTime.substring(3, 5).toInt();
+  
+    if (!alarmActive && targetTime != "" && currentHour == targetHour && currentMinute == targetMinute){
+      alarmActive = true;
+      alarmStartTime = millis();  // Registrar el tiempo de inicio de la alarma
+      durationAlarmMillis= alarmDurationMillis; //se inicializa la variable con 0
+      digitalWrite(LIGHTPIN, HIGH); 
+      Serial.println("Alarma activada");
   }
-}
+
+  }
+
 
 void handleStopAlarm(AsyncWebServerRequest *request) {
   alarmActive = false; // Apagar la alarma

@@ -1,5 +1,4 @@
-#include "ConfigWiFi.h"
-#include "dns.h"
+#include "PortalWiFi.h"
 #include "Alarm.h"
 #include "WebSocket.h"
 #include "WebSPIFFS.h"
@@ -10,9 +9,9 @@ void setup() {
 
   ConfigPin();
 
-  initWiFi();
+  initWiFiPortal();
 
-  setupDNS();
+  startDNSServer();
 
   WebArchiveSPIFFS();
 

@@ -15,11 +15,11 @@ function onMessage(event) {
     document.getElementById('fecha').innerHTML = date.toLocaleDateString();
     document.getElementById('hora').innerHTML = event.data;
   }
-    if (event.data === 'ALARM') {
-      playAlarmSound();
-    } else if (event.data === 'STOP_ALARM') {
-      stopAlarmSound();
-    }
+    // if (event.data === 'ALARM') {
+    //   playAlarmSound();
+    // } else if (event.data === 'STOP_ALARM') {
+    //   stopAlarmSound();
+    // }
   
 }
 
