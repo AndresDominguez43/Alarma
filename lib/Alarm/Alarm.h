@@ -8,10 +8,14 @@
 extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
 extern String targetTime;
-
+extern bool alarmActive;
 const int LIGHTPIN = 2;
 void ConfigPin();
 void Alarm();
 void handleSetTime(AsyncWebServerRequest *request);
 void handleStopAlarm(AsyncWebServerRequest *request);
+void handleSetAlarmDuration(AsyncWebServerRequest *request);
+void handleSetAlarmRepetitions(AsyncWebServerRequest *request);
+void handleSetAlarmInterval(AsyncWebServerRequest *request);
+
 #endif

@@ -1,15 +1,10 @@
 #include "PortalWiFi.h"
 #include <WiFiManager.h>
-#include <DNSServer.h>
 #include <ESPmDNS.h>
-#include <WiFi.h>
 
 DNSServer dnsServer;
 WiFiManager wm;
 
-void startDNSServer(){
-  dnsServer.start(53, "*", WiFi.softAPIP());
-}
 void startMDNS(const char* hostname){
   if(!MDNS.begin(hostname)){
     Serial.println("Error al configurar MDNS");

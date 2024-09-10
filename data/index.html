@@ -25,7 +25,7 @@
                     <span class="close-btn">&times;</span>  
                     <input type="time" id="targetTime" placeholder="HH:MM..." class="handleSetTime"/>
 
-                    <button onclick="setTargetTime()">Set</button>   <!-- Seteamos la alarma-->
+                    <button onclick="setConfigAlarm()">Set</button>   <!-- Seteamos la alarma-->
                     <button id="durationBtn">Duracion</button> <!-- Seteamos cuanto dura la alarma-->
                     <button id="repetitiveBtn">Repetitividad</button> <!-- Seteamos cuántas veces se repite la alarma-->
 
@@ -38,7 +38,7 @@
                             <option value="1.5">1.5 minutos</option>
                         </select>
                     </div>
-                    <!--Menu desplegable para la repetividad-->
+                    
                     <div id="repetitiveAlarm" class="repetitivePopup" style="display: none;">
                     <label for="repeatCount">Repetir:</label>
                     <select id="repeatCount" class="handleSetTime">
@@ -46,7 +46,27 @@
                         <option value="2">2 veces</option>
                         <option value="3">3 veces</option>    
                     </select>
+                    <button id="intervalBtn">Intervalo</button> <!-- Seteamos cuántas veces se repite la alarma-->
                     </div>
+
+                    <div id="durationRepeat" class="repeatPopup" style="display: none;">
+                        <label for="durationTimeRepeat">Duración: </label>
+                        <select id="durationTimeRepeat" class="handleSetTime">
+                            <option value="0.5">30 segundos</option>
+                            <option value="1">1 minuto</option>
+                            <option value="1.5">1.5 minutos</option>
+                        </select>
+                    </div>
+
+                    <div id="durationInterval" class="intervalPopup" style="display: none;">
+                        <label for="durationRepeatInterval">intervalo: </label>
+                        <select id="durationRepeatInterval" class="handleSetTime">
+                            <option value="1">1 minuto</option>
+                            <option value="3">3 minutos</option>
+                            <option value="5">5 minutos</option>
+                        </select>
+                    </div>
+                    
                 </div>
             </div>
             <button onclick="stopAlarm()">Cancel</button>
@@ -76,6 +96,7 @@
             </div>
         </div>
     </div>
+    <audio id="alarmAudio" scr="/ringtone.mp3" preload="auto"></audio>
 </body>
 
     

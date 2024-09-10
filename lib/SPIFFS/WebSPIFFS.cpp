@@ -55,18 +55,20 @@ if(!SPIFFS.begin(true)){
     request->send(200,"text/plain", "Alarma guardada en SPIFFS");
   });
   server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
-  
+  server.on("/setAlarmDuration", HTTP_GET, handleSetAlarmDuration);
+  server.on("/setAlarmRepeat", HTTP_GET, handleSetAlarmRepetitions);
+  server.on("/setAlarmInterval", HTTP_GET, handleSetAlarmInterval);
   server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(SPIFFS, "/favicon.ico", "image/x-icon"); 
   });
 
 
-// server.on("/alarm.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
-//     if(!SPIFFS.exists("/ringtone.mp3")){
-//       return;
-//         request->send(404, "text/plain", "Archivo no encontrado");
+server.on("/alarm.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(!SPIFFS.exists("/ringtone.mp3")){
+      return;
+        request->send(404, "text/plain", "Archivo no encontrado");
     
-//     }
-//       request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
-//   });
+    }
+      request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
+  });
 }
