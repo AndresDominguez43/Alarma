@@ -9,7 +9,6 @@ extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
 extern String targetTime;
 extern bool alarmActive;
-
 const int LIGHTPIN = 2;
 void ConfigPin();
 void Alarm();

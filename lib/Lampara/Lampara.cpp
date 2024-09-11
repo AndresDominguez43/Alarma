@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Lampara.h>
-
+#include "Alarm.h"
 Lampara::Lampara(int salida){
 
     _salida = salida;
@@ -21,5 +21,3 @@ void Lampara::apagar(){
      dacWrite(_salida, _valorAnalogico);
 
 }
-
- 

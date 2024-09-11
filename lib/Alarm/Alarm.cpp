@@ -12,6 +12,8 @@ unsigned long alarmDurationMillis = 0;
 unsigned long alarmIntervalMillis = 0;
 unsigned int alarmRepeatCount = 1;
 unsigned int currentRepetition = 0;
+unsigned long durationAlarmMillis = 0;
+
 void ConfigPin(){
     pinMode(LIGHTPIN, OUTPUT);
     digitalWrite(LIGHTPIN, LOW);
@@ -65,26 +67,48 @@ void handleSetAlarmInterval(AsyncWebServerRequest *request) {
 void Alarm(){
   String currentTime = timeClient.getFormattedTime().substring(0,5);
   
-    if (!alarmActive && targetTime != "" && currentTime == targetTime) {
+  int targetHour = targetTime.substring(0, 2).toInt();
+  int targetMinute = targetTime.substring(3, 5).toInt();
+
+  int currentHour = currentTime.substring(0, 2).toInt();
+  int currentMinute = currentTime.substring(3, 5).toInt();
+  
+    if (!alarmActive && targetTime != "" && currentHour == targetHour && currentMinute == targetMinute){
       alarmActive = true;
       alarmStartTime = millis();  // Registrar el tiempo de inicio de la alarma
-      digitalWrite(LIGHTPIN, HIGH);  // Encender el LED
+      durationAlarmMillis= alarmDurationMillis; //se inicializa la variable con 0
+      digitalWrite(LIGHTPIN, HIGH); 
       Serial.println("Alarma activada");
   }
 
-  // Verificar si la alarma está activa y ha pasado el tiempo de duración
-  if (alarmActive && (millis() - alarmStartTime >= alarmDurationMillis)) {
-      digitalWrite(LIGHTPIN, LOW);  // Apagar el LED
-      alarmActive = false;  // Marcar la alarma como inactiva
-      Serial.println("Alarma desactivada");
-        if (currentRepetition < alarmRepeatCount) {
-          // Si quedan repeticiones, ajustar el tiempo de la próxima alarma
-          targetTime = ""; // Forzar a esperar al siguiente minuto para reiniciar
+//  Verificar si la alarma está activa y ha pasado el tiempo de duración
+  if (alarmActive){
+    unsigned long  currentMillis = millis(); 
+    unsigned long  elapsedMillis = currentMillis - alarmStartTime; //Calcula el tiempo transcurrido desde que arranco la alarma
+
+        durationAlarmMillis = alarmDurationMillis - elapsedMillis;
+
+      // Verificar si el tiempo restante ha llegado a cero
+      if (durationAlarmMillis <= 0) {
+          digitalWrite(LIGHTPIN, LOW);  // Apagar el LED
+          alarmActive = false;  // Marcar la alarma como inactiva
+          Serial.println("Alarma desactivada");
+
+          // Verificar si quedan repeticiones
+          if (currentRepetition < alarmRepeatCount) {
+              currentRepetition++;
+              targetTime = "";  // Forzar a esperar al siguiente ciclo para reiniciar
+              alarmStartTime = millis();  // Reiniciar el tiempo de inicio para la próxima repetición
+          } else {
+              currentRepetition = 0;  // Resetear el conteo de repeticiones
+          }
       } else {
-          currentRepetition = 0;  // Resetear repeticiones
+          // Mostrar la duración restante de la alarma
+          Serial.print("Tiempo restante de la alarma: ");
+          Serial.println(durationAlarmMillis);
       }
   }
-  }
+}
 
 
 

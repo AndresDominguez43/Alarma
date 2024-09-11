@@ -1,28 +1,42 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
-var audioContext;
-var alarmAudioBuffer;
+var alarmAudio = document.getElementById('alarmAudio');
 
 function initWebSocket() {
   console.log('Trying to open a WebSocket connection...');
   websocket = new WebSocket(gateway);
   websocket.onmessage = onMessage;
+  
 }
 
 function onMessage(event) {
   var date = new Date();
-  if (event.data !== 'ALARM' && event.data !== 'STOP_ALARM'){
+  
+  if (event.data === 'ALARM') {
+    if (alarmAudio) {
+      // Verifica si el archivo de audio está listo
+      alarmAudio.play().then(() => {
+        console.log('Se ha reproducido el ringtone de la alarma');
+      }).catch((error) => {
+        console.error('Error al reproducir el audio: ', error);
+      });
+    } else {
+      console.error('El elemento de audio no se encontró o no está cargado correctamente');
+    }
+  } else if (event.data === 'STOP_ALARM') {
+    if (alarmAudio) {
+      alarmAudio.pause();
+      alarmAudio.currentTime = 0;  // Reinicia el audio al principio
+      console.log('El ringtone de la alarma se ha detenido');
+    } else {
+      console.error('El elemento de audio no se encontró o no está cargado correctamente');
+    }
+  } else {
     document.getElementById('fecha').innerHTML = date.toLocaleDateString();
     document.getElementById('hora').innerHTML = event.data;
   }
-    // if (event.data === 'ALARM') {
-    //   playAlarmSound();
-    // } else if (event.data === 'STOP_ALARM') {
-    //   stopAlarmSound();
-    // }
-  
 }
-//esto son los popup de los botones repetitivo y duracion
+
 document.getElementById('repetitiveBtn').addEventListener('click', function() {
   var menu = document.getElementById('repetitiveAlarm');
   if (menu.style.display === "none") {
@@ -49,7 +63,6 @@ document.getElementById('intervalBtn').addEventListener('click', function() {
       menu.style.display = "none";
   }
 });
-
 
 document.addEventListener('DOMContentLoaded', (event) => {
   // Obtener elementos del DOM
@@ -114,40 +127,6 @@ window.onload = function(event) {
   initWebSocket();
 }
 
-// function playAlarmSound() {
-//   if (!audioContext) {
-//     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-//   }
-
-//   if (!alarmAudioBuffer) {
-//     fetch('/ringtone.mp3')
-//       .then(response => response.arrayBuffer())
-//       .then(data => audioContext.decodeAudioData(data))
-//       .then(buffer => {
-//         alarmAudioBuffer = buffer;
-//         playBuffer();
-//       })
-//       .catch(error => console.error('Error al cargar el audio:', error));
-//   } else {
-//     playBuffer();
-//   }
-// }
-
-// function playBuffer() {
-//   const source = audioContext.createBufferSource();
-//   source.buffer = alarmAudioBuffer;
-//   source.loop = true;
-//   source.connect(audioContext.destination);
-//   source.start();
-// }
-
-// function stopAlarmSound() {
-//   if (audioContext) {
-//     audioContext.close().catch(error => console.error('Error al detener el audio:', error));
-//     audioContext = null;
-//     alarmAudioBuffer = null;
-//   }
-// }
 function stopAlarm() {
   fetch('/stopAlarm', { method: 'POST' })
       .then(response => response.text())

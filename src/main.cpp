@@ -1,5 +1,4 @@
-#include "ConfigWiFi.h"
-#include "dns.h"
+#include "PortalWiFi.h"
 #include "Alarm.h"
 #include "WebSocket.h"
 #include "WebSPIFFS.h"
@@ -8,14 +7,11 @@
 Lampara Lampara1(25);
 
 void setup() {
-
   Serial.begin(115200);
 
   ConfigPin();
 
-  initWiFi();
-
-  setupDNS();
+  initWiFiPortal();
 
   WebArchiveSPIFFS();
 
@@ -29,16 +25,15 @@ void loop() {
   timeClient.update();
   String currentTime = timeClient.getFormattedTime();
   Alarm();
-  notifyClients();
-  delay(10); 
-  
 
   if (alarmActive){
-     Lampara1.encender();
+    Lampara1.encender();
   } else {
-     Lampara1.apagar();
+    Lampara1.apagar();
   }
 
+  notifyClients();
+  delay(1000); 
 }
 
 
