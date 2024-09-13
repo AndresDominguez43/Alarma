@@ -2,27 +2,27 @@
 #include "Alarm.h"
 
 
-void saveTargetTime(String time) {
-  File file = SPIFFS.open("/targetTime.txt", FILE_WRITE);
+void saveValueToSPIFFS(const char* filename, String value) {
+  File file = SPIFFS.open(filename, FILE_WRITE);
   if (!file) {
-    Serial.println("Error al abrir el archivo para escribir targetTime");
+    Serial.println("Error al abrir el archivo para escribir: "+ String(filename));
     return;
   }
-  file.println(time);  // Guardar el valor
+  file.println(value);  // Guardar el valor
   file.close();
-  Serial.println("targetTime guardado: " + time);
+  Serial.println("Guardado en" + String(filename) + ": " + value);
 }
 
-String readTargetTime() {
-  File file = SPIFFS.open("/targetTime.txt", FILE_READ);
+String readValue(const char* filename, String resetValue) {
+  File file = SPIFFS.open(filename, FILE_READ);
   if (!file) {
-    Serial.println("Error al abrir el archivo para leer targetTime");
-    return "00:00";  // Retornar valor predeterminado si no existe el archivo
+    Serial.println("Error al abrir el archivo para leer: " + String(filename ));
+    return resetValue;  // Retornar valor predeterminado si no existe el archivo
   }
-  String time = file.readStringUntil('\n');  // Leer el valor
+  String value = file.readStringUntil('\n');  // Leer el valor
   file.close();
-  Serial.println("targetTime leído: " + time);
-  return time;
+  Serial.println("Leído desde " + String(filename) + ": " + value);
+  return value;
 }
 
 
@@ -31,7 +31,20 @@ if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
-  targetTime = readTargetTime();
+  targetTime = readValue("/targetTime.txt", "00:00");
+  durationStr = readValue("/alarmDuration.txt", "0:5"); // Valor en minutos convertido a milisegundos
+  repeatStr = readValue("/alarmRepeat.txt", "0");
+  intervalStr = readValue("/alarmInterval.txt", "1"); // Valor en minutos convertido a milisegundos
+
+  alarmDurationMillis = (unsigned long)(durationStr.toFloat() * 60000);
+  alarmRepeatCount = repeatStr.toInt();
+  alarmIntervalMillis = (unsigned long)(intervalStr.toFloat() * 60000);
+
+  Serial.println("Valores leídos:");
+  Serial.println("targetTime: " + targetTime);
+  Serial.println("Duración de la alarma: " + String(alarmDurationMillis));
+  Serial.println("Repeticiones: " + String(alarmRepeatCount));
+  Serial.println("Intervalo: " + String(alarmIntervalMillis));
 
   File file = SPIFFS.open("/index.html");
   if(!file){
@@ -49,26 +62,20 @@ if(!SPIFFS.begin(true)){
   server.on("/style.css", HTTP_GET,[](AsyncWebServerRequest *request){
     request->send(SPIFFS,"/style.css","text/css");
   });
-  server.on("/set-time", HTTP_POST, [](AsyncWebServerRequest *request){
-    handleSetTime(request);
-    saveTargetTime(targetTime);
-    request->send(200,"text/plain", "Alarma guardada en SPIFFS");
-  });
+
+
   server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
+  server.on("/set-time",HTTP_POST,handleSetTime);
   server.on("/setAlarmDuration", HTTP_GET, handleSetAlarmDuration);
   server.on("/setAlarmRepeat", HTTP_GET, handleSetAlarmRepetitions);
   server.on("/setAlarmInterval", HTTP_GET, handleSetAlarmInterval);
+
   server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(SPIFFS, "/favicon.ico", "image/x-icon"); 
   });
 
 
-server.on("/alarm.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(!SPIFFS.exists("/ringtone.mp3")){
-      return;
-        request->send(404, "text/plain", "Archivo no encontrado");
-    
-    }
+server.on("/ringtone.mp3", HTTP_GET, [](AsyncWebServerRequest *request){
       request->send(SPIFFS, "/ringtone.mp3", "audio/mpeg");
   });
 }

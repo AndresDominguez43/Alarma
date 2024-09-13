@@ -33,7 +33,7 @@ void loop() {
   }
 
   notifyClients();
-  delay(1000); 
+  delay(1000);  
 }
 
 

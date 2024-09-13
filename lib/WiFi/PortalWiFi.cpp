@@ -16,7 +16,7 @@ void startMDNS(const char* hostname){
 
 void initWiFiPortal(){
   
-  // wm.resetSettings();
+  //wm.resetSettings();
   bool res = wm.autoConnect("PortalCautivo", "proyecto123");
   if(!res){
     Serial.println("No se pudo conectar a WiFi");

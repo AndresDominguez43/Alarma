@@ -6,62 +6,67 @@ function initWebSocket() {
   console.log('Trying to open a WebSocket connection...');
   websocket = new WebSocket(gateway);
   websocket.onmessage = onMessage;
-  
 }
 
 function onMessage(event) {
   var date = new Date();
-  
-  if (event.data === 'ALARM') {
-    if (alarmAudio) {
-      // Verifica si el archivo de audio está listo
-      alarmAudio.play().then(() => {
-        console.log('Se ha reproducido el ringtone de la alarma');
-      }).catch((error) => {
-        console.error('Error al reproducir el audio: ', error);
-      });
-    } else {
-      console.error('El elemento de audio no se encontró o no está cargado correctamente');
-    }
-  } else if (event.data === 'STOP_ALARM') {
-    if (alarmAudio) {
-      alarmAudio.pause();
-      alarmAudio.currentTime = 0;  // Reinicia el audio al principio
-      console.log('El ringtone de la alarma se ha detenido');
-    } else {
-      console.error('El elemento de audio no se encontró o no está cargado correctamente');
-    }
-  } else {
-    document.getElementById('fecha').innerHTML = date.toLocaleDateString();
-    document.getElementById('hora').innerHTML = event.data;
+  document.getElementById('fecha').innerHTML = date.toLocaleDateString();
+  document.getElementById('hora').innerHTML = event.data;
+
+  // Agregar lógica para actualizar el estado de la alarma si es necesario
+  if (event.data === "ON") {
+    activateAlarm();
+  } else if (event.data === "OFF") {
+    deactivateAlarm();
   }
+}
+window.onload = function(event) {
+  // Verificar si el audio está cargado
+  alarmAudio.addEventListener('canplaythrough', function() {
+    console.log('El archivo de audio está listo para reproducirse.');
+  });
+
+  initWebSocket();
+};
+function updateAlarmStatus(status) {
+  const statusElement = document.getElementById('alarmStatus');
+  statusElement.innerHTML = status;
+}
+
+function activateAlarm() {
+  fetch('/setAlarm?state=1')
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      document.getElementById('alarmAudio').play();
+      alarmAudio.loop = true;
+    });
+}
+
+function deactivateAlarm() {
+  fetch('/setAlarm?state=0')
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      document.getElementById('alarmAudio').pause();
+      document.getElementById('alarmAudio').currentTime = 0;
+      updateAlarmStatus('Alarm deactivated');
+    });
 }
 
 document.getElementById('repetitiveBtn').addEventListener('click', function() {
   var menu = document.getElementById('repetitiveAlarm');
-  if (menu.style.display === "none") {
-      menu.style.display = "block";
-  } else {
-      menu.style.display = "none";
-  }
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
 });
 
 document.getElementById('durationBtn').addEventListener('click', function() {
   var menu = document.getElementById('durationAlarm');
-  if (menu.style.display === "none") {
-      menu.style.display = "block";
-  } else {
-      menu.style.display = "none";
-  }
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
 });
 
 document.getElementById('intervalBtn').addEventListener('click', function() {
   var menu = document.getElementById('durationInterval');
-  if (menu.style.display === "none") {
-      menu.style.display = "block";
-  } else {
-      menu.style.display = "none";
-  }
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -72,19 +77,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   // Abrir el popup al hacer clic en el botón
   openPopupBtn.addEventListener('click', () => {
-      popup.style.display = 'block';
+    popup.style.display = 'block';
   });
 
   // Cerrar el popup al hacer clic en el botón de cerrar
   closeBtn.addEventListener('click', () => {
-      popup.style.display = 'none';
+    popup.style.display = 'none';
   });
 
   // Cerrar el popup si se hace clic fuera del contenido del popup
   window.addEventListener('click', (event) => {
-      if (event.target == popup) {
-          popup.style.display = 'none';
-      }
+    if (event.target === popup) {
+      popup.style.display = 'none';
+    }
   });
 });
 
@@ -102,6 +107,7 @@ function sendAlarmDuration() {
   xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
   xhr.send();
 }
+
 function sendAlarmRepetitive() {
   var repetitiveValue = document.getElementById('repeatCount').value;
   var xhr = new XMLHttpRequest();
@@ -116,24 +122,23 @@ function sendAlarmInterval() {
   xhr.send();
 }
 
-function setConfigAlarm(){
+function setConfigAlarm() {
   setTargetTime();
   sendAlarmDuration();
   sendAlarmRepetitive();
   sendAlarmInterval();
 }
 
-window.onload = function(event) {
-  initWebSocket();
-}
-
 function stopAlarm() {
-  fetch('/stopAlarm', { method: 'POST' })
-      .then(response => response.text())
-      .then(data => console.log(data));
+  fetch('/stopAlarm', {method: 'POST'})
+    .then(response => response.text())
+    .then(() => {
+      if (alarmAudio) {
+        alarmAudio.pause();
+        alarmAudio.currentTime = 0; // Reinicia el audio
+      }
+    });
 }
-
-
 const api = {
   key: '965af2672919c9a96bec53314dd4f4fd',
   url: `https://api.openweathermap.org/data/2.5/weather`
