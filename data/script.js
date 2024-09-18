@@ -13,21 +13,13 @@ function onMessage(event) {
   document.getElementById('fecha').innerHTML = date.toLocaleDateString();
   document.getElementById('hora').innerHTML = event.data;
 
-  // Agregar lógica para actualizar el estado de la alarma si es necesario
   if (event.data === "ON") {
     activateAlarm();
   } else if (event.data === "OFF") {
     deactivateAlarm();
   }
 }
-window.onload = function(event) {
-  // Verificar si el audio está cargado
-  alarmAudio.addEventListener('canplaythrough', function() {
-    console.log('El archivo de audio está listo para reproducirse.');
-  });
 
-  initWebSocket();
-};
 function updateAlarmStatus(status) {
   const statusElement = document.getElementById('alarmStatus');
   statusElement.innerHTML = status;
@@ -139,6 +131,11 @@ function stopAlarm() {
       }
     });
 }
+
+window.onload = function(event) {
+  initWebSocket();
+}
+
 const api = {
   key: '965af2672919c9a96bec53314dd4f4fd',
   url: `https://api.openweathermap.org/data/2.5/weather`

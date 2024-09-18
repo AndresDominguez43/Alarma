@@ -14,8 +14,9 @@ void setup() {
   initWiFiPortal();
 
   WebArchiveSPIFFS();
-
+  
   initWebSocket();
+
   server.begin();
   timeClient.begin();
 }
@@ -23,7 +24,7 @@ void setup() {
 void loop() {
   ws.cleanupClients();
   timeClient.update();
-  String currentTime = timeClient.getFormattedTime();
+  
   Alarm();
 
   if (alarmActive){

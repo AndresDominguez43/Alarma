@@ -21,6 +21,7 @@ void handleStopAlarm(AsyncWebServerRequest *request);
 void handleSetAlarmDuration(AsyncWebServerRequest *request);
 void handleSetAlarmRepetitions(AsyncWebServerRequest *request);
 void handleSetAlarmInterval(AsyncWebServerRequest *request);
+void stateAlarm(AsyncWebServerRequest *request);
 extern unsigned long alarmDurationMillis;
 extern unsigned long alarmIntervalMillis;
 extern unsigned int alarmRepeatCount;

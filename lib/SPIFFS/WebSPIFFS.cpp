@@ -33,18 +33,10 @@ if(!SPIFFS.begin(true)){
   }
   targetTime = readValue("/targetTime.txt", "00:00");
   durationStr = readValue("/alarmDuration.txt", "0:5"); // Valor en minutos convertido a milisegundos
-  repeatStr = readValue("/alarmRepeat.txt", "0");
+  repeatStr = readValue("/alarmRepeat.txt", "1");
   intervalStr = readValue("/alarmInterval.txt", "1"); // Valor en minutos convertido a milisegundos
 
-  alarmDurationMillis = (unsigned long)(durationStr.toFloat() * 60000);
-  alarmRepeatCount = repeatStr.toInt();
-  alarmIntervalMillis = (unsigned long)(intervalStr.toFloat() * 60000);
 
-  Serial.println("Valores leídos:");
-  Serial.println("targetTime: " + targetTime);
-  Serial.println("Duración de la alarma: " + String(alarmDurationMillis));
-  Serial.println("Repeticiones: " + String(alarmRepeatCount));
-  Serial.println("Intervalo: " + String(alarmIntervalMillis));
 
   File file = SPIFFS.open("/index.html");
   if(!file){
@@ -69,6 +61,7 @@ if(!SPIFFS.begin(true)){
   server.on("/setAlarmDuration", HTTP_GET, handleSetAlarmDuration);
   server.on("/setAlarmRepeat", HTTP_GET, handleSetAlarmRepetitions);
   server.on("/setAlarmInterval", HTTP_GET, handleSetAlarmInterval);
+  server.on("/setAlarm", HTTP_GET, stateAlarm);
 
   server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(SPIFFS, "/favicon.ico", "image/x-icon"); 

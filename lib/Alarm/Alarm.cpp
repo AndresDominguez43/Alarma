@@ -29,23 +29,14 @@ void ConfigPin(){
 }
 
 
-void handleStopAlarm(AsyncWebServerRequest *request) {
-  alarmActive=false;
-  alarmStop = true;
-  alarmON = false;
-  currentRepetition = 0;
-  digitalWrite(LIGHTPIN, LOW);
-  Serial.println("Alarma desactivada");
-  ws.textAll("STOP_ALARM"); // Enviar señal para detener la alarma a través de WebSocket
-  request->send(200, "text/plain", "Alarm stopped");
-}
-
 void handleSetTime(AsyncWebServerRequest *request) {
   if (request->hasParam("time", true)) {
     targetTime = request->getParam("time", true)->value();
     Serial.println("Time set to: " + targetTime); // Mostrar el valor de targetTime en el monitor serial
     saveValueToSPIFFS("/targetTime.txt", targetTime);
     request->send(200, "text/plain", "Time set to: " + targetTime);
+    alarmStop = false;  
+    
   } else {
     request->send(400, "text/plain", "Time parameter missing");
   }
@@ -79,6 +70,37 @@ void handleSetAlarmInterval(AsyncWebServerRequest *request) {
         Serial.println("Intervalo: " + intervalStr + " minutos");
       }
     request->send(200, "text/plain", "Intervalo configurado");
+}
+
+
+void handleStopAlarm(AsyncWebServerRequest *request) {
+  alarmActive=false;
+  alarmStop = true;
+  alarmON = false;
+  currentRepetition = 0;
+  digitalWrite(LIGHTPIN, LOW);
+  Serial.println("Alarma desactivada");
+  //ws.textAll("STOP_ALARM"); // Enviar señal para detener la alarma a través de WebSocket
+  request->send(200, "text/plain", "Alarma desactivada");
+}
+
+void stateAlarm(AsyncWebServerRequest *request) {   //esta funcion es para que funcione correctamente las peticiones http del audio
+  if (request->hasParam("state")) {
+    String state = request->getParam("state")->value();
+    
+    // Guardar el estado de la alarma en SPIFFS
+    if (state == "1") {
+      saveValueToSPIFFS("/alarmState.txt", "1");
+      request->send(200, "text/plain", "Alarma activa");
+    } else if (state == "0") {
+      saveValueToSPIFFS("/alarmState.txt", "0");
+      request->send(200, "text/plain", "Alarma desactiva");
+    } else {
+      request->send(400, "text/plain", "Valor de estado invalido");
+    }
+  } else {
+    request->send(400, "text/plain", "State parameter missing");
+  }
 }
 
 void AlarmActive(){

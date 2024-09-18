@@ -14,12 +14,9 @@
 <body>
     <h1 class="header"> PROYECTO DE SISTEMAS </h1>
     
-    <div class="main-container">
-        <div class="left">
-            <h2>Alarma</h2>
-            <p><span id='fecha'></span></p>
             <p><span id='hora' class = "hora-size"></span></p>            
-            <button id="openPopupBtn">Alarma</button>
+            <p><span id='fecha'></span></p>
+            <button  id="openPopupBtn">Alarma</button>
             <div id="popup" class="popup">
                 <div class="popup-content">
                     <span class="close-btn">&times;</span>  
@@ -42,7 +39,6 @@
                     <div id="repetitiveAlarm" class="repetitivePopup" style="display: none;">
                     <label for="repeatCount">Repetir:</label>
                     <select id="repeatCount" class="handleSetTime">
-                        <option value=" ">No repetir</option>
                         <option value="1">1 vez</option>
                         <option value="2">2 veces</option>
                         <option value="3">3 veces</option>    
@@ -70,11 +66,9 @@
                     
                 </div>
             </div>
-            <button onclick="stopAlarm()">Cancel</button>
-        </div>
+            <button id = "stopalarm" onclick="stopAlarm()">Cancel</button>
         
-        <div class="right">
-            <h3>Clima</h3>
+        <h3>Clima</h3>
             <div class="search-form">
                 <form id="search-form">
                     <div class="searchbox">

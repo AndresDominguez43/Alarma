@@ -11,7 +11,7 @@ void startMDNS(const char* hostname){
     return;
   }
   Serial.println("mDNS: ");
-  Serial.println(hostname);
+  Serial.println("http://" + String(hostname) + ".local");
 }
 
 void initWiFiPortal(){
@@ -23,6 +23,6 @@ void initWiFiPortal(){
     ESP.restart();
   } else{
     Serial.print("Conectado a WiFi");
-    startMDNS("ServidorESP32");
+    startMDNS("Alarma");
   }
 }
