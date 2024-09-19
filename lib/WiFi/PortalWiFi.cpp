@@ -11,18 +11,18 @@ void startMDNS(const char* hostname){
     return;
   }
   Serial.println("mDNS: ");
-  Serial.println(hostname);
+  Serial.println("http://" + String(hostname) + ".local");
 }
 
 void initWiFiPortal(){
   
-  // wm.resetSettings();
+  //wm.resetSettings();
   bool res = wm.autoConnect("PortalCautivo", "proyecto123");
   if(!res){
     Serial.println("No se pudo conectar a WiFi");
     ESP.restart();
   } else{
     Serial.print("Conectado a WiFi");
-    startMDNS("ServidorESP32");
+    startMDNS("Alarma");
   }
 }

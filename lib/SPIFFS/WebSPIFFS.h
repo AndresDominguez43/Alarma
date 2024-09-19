@@ -5,5 +5,6 @@
 #include "WebSocket.h"
 
 void WebArchiveSPIFFS();
+void saveValueToSPIFFS(const char* filename, String value);
 
 #endif

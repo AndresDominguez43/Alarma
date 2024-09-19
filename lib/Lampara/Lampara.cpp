@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Lampara.h>
 #include "Alarm.h"
+
 Lampara::Lampara(int salida){
 
     _salida = salida;
@@ -8,7 +9,7 @@ Lampara::Lampara(int salida){
 }
 
 void Lampara::encender(){
-     _valorAnalogico++;
+     _valorAnalogico = 4095;
 
      dacWrite(_salida, _valorAnalogico);
 
@@ -20,4 +21,10 @@ void Lampara::apagar(){
 
      dacWrite(_salida, _valorAnalogico);
 
+}
+
+void Lampara::rampa(){
+     _valorAnalogico++;
+
+     dacWrite(_salida, _valorAnalogico);
 }
