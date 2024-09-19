@@ -5,10 +5,14 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -10800); // UTC-3 timezone
 
 String targetTime = "00:00";
+String durationLampStr = "00:00";
 String durationStr = "00:00";
 String repeatStr = "00";
 String intervalStr = "00";
 
+unsigned long tiempoAnterior = 0;
+const long intervalo = 10;
+bool intervaloAlarma = 0;
 
 bool alarmActive = false;
 bool alarmDuration = false;
@@ -32,7 +36,7 @@ void ConfigPin(){
 void handleSetTime(AsyncWebServerRequest *request) {
   if (request->hasParam("time", true)) {
     targetTime = request->getParam("time", true)->value();
-    Serial.println("Time set to: " + targetTime); // Mostrar el valor de targetTime en el monitor serial
+    // Serial.println("Time set to: " + targetTime); // Mostrar el valor de targetTime en el monitor serial
     saveValueToSPIFFS("/targetTime.txt", targetTime);
     request->send(200, "text/plain", "Time set to: " + targetTime);
     alarmStop = false;  
@@ -46,7 +50,7 @@ void handleSetAlarmRepetitions(AsyncWebServerRequest *request) {
     if (request->hasParam("repeat")) {
         repeatStr = request->getParam("repeat")->value();
         alarmRepeatCount = repeatStr.toInt();
-        Serial.println("Repeticiones: " + String(alarmRepeatCount));
+        // Serial.println("Repeticiones: " + String(alarmRepeatCount));
         saveValueToSPIFFS("/alarmRepeat.txt", String(alarmRepeatCount));
       }
     request->send(200, "text/plain", "Repeticiones configuradas");
@@ -68,6 +72,16 @@ void handleSetAlarmInterval(AsyncWebServerRequest *request) {
         alarmIntervalMillis = (unsigned long)(intervalStr.toFloat() * 60000);
         saveValueToSPIFFS("/alarmInterval.txt",intervalStr);
         Serial.println("Intervalo: " + intervalStr + " minutos");
+      }
+    request->send(200, "text/plain", "Intervalo configurado");
+}
+
+void handleSetDurationLamp(AsyncWebServerRequest *request) {
+    if (request->hasParam("durationLamp")) {
+        durationLampStr = request->getParam("durationLamp")->value();
+        alarmIntervalMillis = (unsigned long)(durationLampStr.toFloat() * 60000);
+        saveValueToSPIFFS("/alarmInDurationLamp.txt",durationLampStr);
+        Serial.println("Intervalo: " + durationLampStr + " minutos");
       }
     request->send(200, "text/plain", "Intervalo configurado");
 }
@@ -172,5 +186,12 @@ void Alarm(){
       }
   }
   
-
+  void retardo(long intervalo) {
+    unsigned long tiempoActual = millis();   // Obtenemos el tiempo actual
+    // Si ha pasado más de 'intervalo' milisegundos
+    if (tiempoActual - tiempoAnterior >= intervalo) {
+      tiempoAnterior = tiempoActual;         // Actualizamos el tiempo anterior
+      intervaloAlarma=1;  // Cambiamos el estado del LED
+    }
+  }
 

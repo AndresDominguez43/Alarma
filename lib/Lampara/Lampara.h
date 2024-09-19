@@ -10,7 +10,7 @@ class Lampara{
         Lampara(int salida);
         void encender();
         void apagar();
-
+        void rampa();
     private:
         int _salida;
         int _valorAnalogico;

@@ -8,15 +8,10 @@ Lampara Lampara1(25);
 
 void setup() {
   Serial.begin(115200);
-
-  ConfigPin();
-
   initWiFiPortal();
-
-  WebArchiveSPIFFS();
-  
   initWebSocket();
-
+  WebArchiveSPIFFS();
+  ConfigPin();
   server.begin();
   timeClient.begin();
 }
@@ -27,14 +22,15 @@ void loop() {
   
   Alarm();
 
+  // retardo(1000);
   if (alarmActive){
-    Lampara1.encender();
+    Lampara1.rampa();
   } else {
     Lampara1.apagar();
   }
 
   notifyClients();
-  delay(1000);  
+  delay(1000);
 }
 
 

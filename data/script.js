@@ -45,7 +45,15 @@ function deactivateAlarm() {
       updateAlarmStatus('Alarm deactivated');
     });
 }
+// function showCancelButton() {
+//   const cancelButton = document.getElementById('stopalarm');
+//   cancelButton.style.display = 'block'; 
+// }
 
+// function hideCancelButton() {
+//   const cancelButton = document.getElementById('stopalarm');
+//   cancelButton.style.display = 'none'; 
+// }
 document.getElementById('repetitiveBtn').addEventListener('click', function() {
   var menu = document.getElementById('repetitiveAlarm');
   menu.style.display = menu.style.display === "none" ? "block" : "none";
@@ -59,6 +67,12 @@ document.getElementById('durationBtn').addEventListener('click', function() {
 document.getElementById('intervalBtn').addEventListener('click', function() {
   var menu = document.getElementById('durationInterval');
   menu.style.display = menu.style.display === "none" ? "block" : "none";
+});
+
+document.getElementById('lampButton').addEventListener('click', function() {
+  var menu = document.getElementById('durationLampMenu');
+  // Muestra el menú si está oculto, o lo oculta si ya está visible
+  menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -92,6 +106,14 @@ function setTargetTime() {
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("time=" + targetTime);
 }
+
+function sendDurationLamp() {
+  var durationValue = document.getElementById('durationLamp').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/setDurationLamp?durationLamp=" + durationValue, true);
+  xhr.send();
+}
+
 
 function sendAlarmDuration() {
   var durationValue = document.getElementById('durationTime').value;

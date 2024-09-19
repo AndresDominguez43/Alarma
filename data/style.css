@@ -47,15 +47,18 @@ p { /*-----------------------CONTENEDORES EN GENERAL*/
 .fecha{ /*DISPLAY FECHA*/
     padding: 10px 10px;
 }
-
-.openPopupBtn{ /*------------BOTON "Alarma"*/
-    text-align: center;
+.button-container{
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-.stopalarm{ /*---------------BOTON "Cancelar"*/
-    text-align: center;
-    display: flex;
+.button-Stop{
+    padding: 0.8rem 4rem;
+    background-color: #c51f1f;
+    border: none;
+    margin-top: 0.5rem;
 }
 
 .action-button {

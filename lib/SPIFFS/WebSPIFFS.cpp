@@ -32,17 +32,16 @@ if(!SPIFFS.begin(true)){
     return;
   }
   targetTime = readValue("/targetTime.txt", "00:00");
-  durationStr = readValue("/alarmDuration.txt", "0:5"); // Valor en minutos convertido a milisegundos
+  durationStr = readValue("/alarmDuration.txt", "0:5"); 
   repeatStr = readValue("/alarmRepeat.txt", "1");
-  intervalStr = readValue("/alarmInterval.txt", "1"); // Valor en minutos convertido a milisegundos
-
-
-
+  intervalStr = readValue("/alarmInterval.txt", "1"); 
+  durationLampStr = readValue("/alarmInDurationLamp.txt", "00:00"); 
   File file = SPIFFS.open("/index.html");
   if(!file){
     Serial.println("Failed to open file for reading");
     return;
   }
+
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS,"/index.html","text/html");
   });
@@ -58,6 +57,7 @@ if(!SPIFFS.begin(true)){
 
   server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
   server.on("/set-time",HTTP_POST,handleSetTime);
+  server.on("/setDurationLamp", HTTP_GET, handleSetDurationLamp);
   server.on("/setAlarmDuration", HTTP_GET, handleSetAlarmDuration);
   server.on("/setAlarmRepeat", HTTP_GET, handleSetAlarmRepetitions);
   server.on("/setAlarmInterval", HTTP_GET, handleSetAlarmInterval);
