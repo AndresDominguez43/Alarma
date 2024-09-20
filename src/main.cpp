@@ -22,15 +22,18 @@ void loop() {
   
   Alarm();
 
-  // retardo(1000);
+  retardo(30);
+  if(intervaloAlarma){
   if (alarmActive){
     Lampara1.rampa();
+    intervaloAlarma = 0;
   } else {
     Lampara1.apagar();
+    intervaloAlarma = 0;
+  }
   }
 
   notifyClients();
-  delay(1000);
 }
 
 

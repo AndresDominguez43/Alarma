@@ -3,11 +3,10 @@
 }
 
 :root {
-    --bg-color: #666666;
-    --bg-colorPP: #77ecc5;
-    --bg-color1: #ffffff;
-    --text-color: #77ecc5;
-    --text-color1: #000000;
+    --bg-color: rgb(106, 125, 142);
+    --bg-colorPP: rgb(99, 152, 177);
+    --text-color: rgb(9, 46, 71);
+    
     font-size: 18px;
 }  
 .main-container {
@@ -24,30 +23,42 @@
 /*----------------------------------------------PANTALLA PRINCIPAL----------------------------------*/
 body { /*--------------------COLOR DE FONDO*/
     font-family: 'Lato', sans-serif;
-    background-color: var(--bg-color);
+    height: 100vh;
+    background-image: url('https://i.pinimg.com/564x/56/a0/5c/56a05ce54b5b652f2014af2c22f06415.jpg ');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 p { /*-----------------------CONTENEDORES EN GENERAL*/
-    margin-bottom: 0.75rem;
-    line-height: 3rem;
+    
     font-weight: bold;
     text-align: center;
+    margin: none;
 }
 
 .header{ /* -----------------TEXTO "PROYECTO DE SISTEMAS"*/
-    color: var(--text-color);
-    margin-bottom: 3rem;
-    font-size: 2rem;
+    color:  var(--bg-colorPP);
+    margin-bottom: 1.8rem;
+    font-size: 2.4rem;
     padding: 10px;
     text-align: center;
 }
 
 
 
-.fecha{ /*DISPLAY FECHA*/
-    padding: 10px 10px;
+.fecha-size{ /*DISPLAY FECHA*/
+    text-align: center;
+    padding: 0;
+    font-size: 27px;
+    margin-bottom: 2rem;
+
+}
+.popup{
+    align-items: center;
 }
 .button-container{
+    margin-top: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,23 +66,13 @@ p { /*-----------------------CONTENEDORES EN GENERAL*/
 }
 
 .button-Stop{
+    margin-top: 0.4rem;
     padding: 0.8rem 4rem;
-    background-color: #c51f1f;
+    background-color: rgb(150, 0, 0);
     border: none;
-    margin-top: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.2rem;
 }
-
-.action-button {
-    background-color: var(--text-color); /* Color de fondo del botón */
-    border: none;
-    color: var(--text-color1); /* Color del texto */
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    margin: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 
 h3 { /* ---------------------Texto "Clima" */
     font-size: 2rem;   /* Cambia el tamaño de la fuente */
@@ -85,37 +86,17 @@ h3 { /* ---------------------Texto "Clima" */
 
 /*------------------------------------------------POPUP-------------------------------------------*/
 
-.close-btn { /* -------------BOTON PARA CERRAR EL POPUP "X"*/
-    /*--text-color: #77ecc5;*/
-    color: #c51f1f;
-    /*float: right;*/
-    font-size: 3rem;
-    font-weight: bold; /* Pone el texto en negrita */
-    cursor: pointer;
-    text-align: center;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: #2d1c9b;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.handleSetTime{ /*------------OBJETO PARA SELECCIONAR LA HORA DE ALARMA*/
-    padding: 10px 10px;
+.button-Alarm{ /*------------OBJETO PARA SELECCIONAR LA HORA DE ALARMA*/
     border: none;
     background-color: var(--text-color);
-    max-width: 200px;
-    margin: 0px auto;
-    border-radius: 3px;
+    margin-bottom: 1rem;
     text-align: center;
+    padding: 0.8rem 4.36rem;
 }
 
 
 .search-form { /*-------------BUSCADOR DE CIUDAD*/ 
-    margin: 20px 20px;
+    margin: 5px 10px;
     text-align: center;
 }
 .searchbox { /*BORDES DEL CONTENEDOR*/
@@ -143,7 +124,7 @@ h3 { /* ---------------------Texto "Clima" */
     margin: 40px auto;
     max-width: 320px;
     background: none;
-    color: var(--bg-color1);
+    color: var(--text-color);
     padding: 5px;
     text-align: center;
     border-radius: 3px;
@@ -216,8 +197,7 @@ margin-top: 0.1rem;
     width: 100%;
     height: 100%;
     text-align: center;
-    
-/*    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    background-color: #00000052;
 }
 
 .popup-content {
@@ -226,13 +206,26 @@ margin-top: 0.1rem;
     padding: 20px;
     border: none;
     width: 80%;
-    max-width: 500px;
+    max-width: 700px;
     border-radius: 10px;
     text-align: center;
 }
 .hora-size{ /*---------------DISPLAY HORA---------NO MOVER*/
-    font-size: 500%;
+    font-size: 200%;
     font-weight: bold;
     text-align: center;
-    padding: 20px;
+    width: auto;
+    margin-bottom: 0;
+}
+
+.set{
+    padding: 0.5rem 1rem;
+    background-color: var(--text-color);
+    border-radius: 5px;
+    border-color: #000000;
+}
+.handleSetTime{
+    background-color: var(--text-color);
+    padding: 0.5rem 2rem;
+    border: none;
 }

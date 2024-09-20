@@ -5,18 +5,13 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -10800); // UTC-3 timezone
 
 String targetTime = "00:00";
-String durationLampStr = "00:00";
-String durationStr = "00:00";
-String repeatStr = "00";
-String intervalStr = "00";
-
+//String durationStr = "00:00";
 unsigned long tiempoAnterior = 0;
 const long intervalo = 10;
 bool intervaloAlarma = 0;
 
 bool alarmActive = false;
-bool alarmDuration = false;
-bool alarmRepeat = false; 
+//bool alarmDuration = false;
 bool alarmStop = false;
 bool alarmON = false;
 
@@ -46,45 +41,16 @@ void handleSetTime(AsyncWebServerRequest *request) {
   }
 }
 
-void handleSetAlarmRepetitions(AsyncWebServerRequest *request) {
-    if (request->hasParam("repeat")) {
-        repeatStr = request->getParam("repeat")->value();
-        alarmRepeatCount = repeatStr.toInt();
-        // Serial.println("Repeticiones: " + String(alarmRepeatCount));
-        saveValueToSPIFFS("/alarmRepeat.txt", String(alarmRepeatCount));
-      }
-    request->send(200, "text/plain", "Repeticiones configuradas");
-}
 
-void handleSetAlarmDuration(AsyncWebServerRequest *request) {
-    if (request->hasParam("duration")) {
-        durationStr = request->getParam("duration")->value();
-          alarmDurationMillis = (unsigned long)(durationStr.toFloat() * 60000);
-          saveValueToSPIFFS("/alarmDuration.txt",durationStr);
-        Serial.println("Duración seleccionada: " + durationStr + " minutos");
-      }
-    request->send(200, "text/plain", "Duración configurada");
-}
-
-void handleSetAlarmInterval(AsyncWebServerRequest *request) {
-    if (request->hasParam("interval")) {
-        intervalStr = request->getParam("interval")->value();
-        alarmIntervalMillis = (unsigned long)(intervalStr.toFloat() * 60000);
-        saveValueToSPIFFS("/alarmInterval.txt",intervalStr);
-        Serial.println("Intervalo: " + intervalStr + " minutos");
-      }
-    request->send(200, "text/plain", "Intervalo configurado");
-}
-
-void handleSetDurationLamp(AsyncWebServerRequest *request) {
-    if (request->hasParam("durationLamp")) {
-        durationLampStr = request->getParam("durationLamp")->value();
-        alarmIntervalMillis = (unsigned long)(durationLampStr.toFloat() * 60000);
-        saveValueToSPIFFS("/alarmInDurationLamp.txt",durationLampStr);
-        Serial.println("Intervalo: " + durationLampStr + " minutos");
-      }
-    request->send(200, "text/plain", "Intervalo configurado");
-}
+// void handleSetAlarmDuration(AsyncWebServerRequest *request) {
+//     if (request->hasParam("duration")) {
+//         durationStr = request->getParam("duration")->value();
+//           alarmDurationMillis = (unsigned long)(durationStr.toFloat() * 60000);
+//           saveValueToSPIFFS("/alarmDuration.txt",durationStr);
+//         Serial.println("Duración seleccionada: " + durationStr + " minutos");
+//       }
+//     request->send(200, "text/plain", "Duración configurada");
+// }
 
 
 void handleStopAlarm(AsyncWebServerRequest *request) {
@@ -98,24 +64,24 @@ void handleStopAlarm(AsyncWebServerRequest *request) {
   request->send(200, "text/plain", "Alarma desactivada");
 }
 
-void stateAlarm(AsyncWebServerRequest *request) {   //esta funcion es para que funcione correctamente las peticiones http del audio
-  if (request->hasParam("state")) {
-    String state = request->getParam("state")->value();
+// void stateAlarm(AsyncWebServerRequest *request) {   //esta funcion es para que funcione correctamente las peticiones http del audio
+//   if (request->hasParam("state")) {
+//     String state = request->getParam("state")->value();
     
-    // Guardar el estado de la alarma en SPIFFS
-    if (state == "1") {
-      saveValueToSPIFFS("/alarmState.txt", "1");
-      request->send(200, "text/plain", "Alarma activa");
-    } else if (state == "0") {
-      saveValueToSPIFFS("/alarmState.txt", "0");
-      request->send(200, "text/plain", "Alarma desactiva");
-    } else {
-      request->send(400, "text/plain", "Valor de estado invalido");
-    }
-  } else {
-    request->send(400, "text/plain", "State parameter missing");
-  }
-}
+//     // Guardar el estado de la alarma en SPIFFS
+//     if (state == "1") {
+//       saveValueToSPIFFS("/alarmState.txt", "1");
+//       request->send(200, "text/plain", "Alarma activa");
+//     } else if (state == "0") {
+//       saveValueToSPIFFS("/alarmState.txt", "0");
+//       request->send(200, "text/plain", "Alarma desactiva");
+//     } else {
+//       request->send(400, "text/plain", "Valor de estado invalido");
+//     }
+//   } else {
+//     request->send(400, "text/plain", "State parameter missing");
+//   }
+// }
 
 void AlarmActive(){
   alarmStartTime = millis(); //Guardamos el tiempo de inicio de la alarma
@@ -148,43 +114,21 @@ void Alarm(){
         AlarmActive();
       }
   }
-      if(alarmActive){
-        unsigned long elapsedTime = millis() - alarmStartTime; //Calcula el tiempo que paso desde que se activo la alarma.
+      // if(alarmActive){
+      //   unsigned long elapsedTime = millis() - alarmStartTime; //Calcula el tiempo que paso desde que se activo la alarma.
         
-        if(alarmDurationMillis>elapsedTime){
-          durationAlarmMillis = alarmDurationMillis - elapsedTime; //Decrementa el tiempo restante
-        } else{
-          durationAlarmMillis = 0;
-          AlarmDesactive();
+      //   if(alarmDurationMillis>elapsedTime){
+      //     durationAlarmMillis = alarmDurationMillis - elapsedTime; //Decrementa el tiempo restante
+      //   } else{
+      //     durationAlarmMillis = 0;
+      //     AlarmDesactive();
 
-          if(alarmRepeatCount>0){
-            alarmRepeatCount--; //Si hay repeticiones, que las decremente
-            currentRepetition++; //repeticiones ejecutadas
-            alarmStartTime = millis();
-            alarmActive = false;
-            Serial.print("Intervalos restantes: ");
-            Serial.println(alarmRepeatCount);
-          } else{
-            Serial.println("Repeticiones completadas.");
-          }
-        }
-        Serial.print("Falta: ");
-        Serial.println(durationAlarmMillis/1000); //Muestar cuanto queda prendida la alarma en segundos
+          
+      //   }
+        // Serial.print("Falta: ");
+        // Serial.println(durationAlarmMillis/1000); //Muestar cuanto queda prendida la alarma en segundos
       }
 
-      if (alarmRepeatCount > 0 && !alarmActive &&currentRepetition> 0) {
-        unsigned long timeSinceAlarmStop = millis() - alarmStartTime;
-        if (timeSinceAlarmStop < alarmIntervalMillis) {
-            unsigned long remainingIntervalMillis = alarmIntervalMillis - timeSinceAlarmStop;
-            Serial.print("Se repite en: ");
-            Serial.println(remainingIntervalMillis / 1000); // Muestra el intervalo restante en segundos
-        } else if (timeSinceAlarmStop >= alarmIntervalMillis) {
-            // Cuando el intervalo haya pasado, activa la alarma de nuevo
-            AlarmActive(); // Activa la alarma después del intervalo
-            alarmStartTime = millis(); // Reinicia el tiempo de inicio para la próxima duración
-        }
-      }
-  }
   
   void retardo(long intervalo) {
     unsigned long tiempoActual = millis();   // Obtenemos el tiempo actual

@@ -13,67 +13,14 @@ function onMessage(event) {
   document.getElementById('fecha').innerHTML = date.toLocaleDateString();
   document.getElementById('hora').innerHTML = event.data;
 
-  if (event.data === "ON") {
-    activateAlarm();
-  } else if (event.data === "OFF") {
-    deactivateAlarm();
-  }
+  
 }
 
-function updateAlarmStatus(status) {
-  const statusElement = document.getElementById('alarmStatus');
-  statusElement.innerHTML = status;
-}
 
-function activateAlarm() {
-  fetch('/setAlarm?state=1')
-    .then(response => response.text())
-    .then(data => {
-      console.log(data);
-      document.getElementById('alarmAudio').play();
-      alarmAudio.loop = true;
-    });
-}
-
-function deactivateAlarm() {
-  fetch('/setAlarm?state=0')
-    .then(response => response.text())
-    .then(data => {
-      console.log(data);
-      document.getElementById('alarmAudio').pause();
-      document.getElementById('alarmAudio').currentTime = 0;
-      updateAlarmStatus('Alarm deactivated');
-    });
-}
-// function showCancelButton() {
-//   const cancelButton = document.getElementById('stopalarm');
-//   cancelButton.style.display = 'block'; 
-// }
-
-// function hideCancelButton() {
-//   const cancelButton = document.getElementById('stopalarm');
-//   cancelButton.style.display = 'none'; 
-// }
-document.getElementById('repetitiveBtn').addEventListener('click', function() {
-  var menu = document.getElementById('repetitiveAlarm');
-  menu.style.display = menu.style.display === "none" ? "block" : "none";
-});
-
-document.getElementById('durationBtn').addEventListener('click', function() {
-  var menu = document.getElementById('durationAlarm');
-  menu.style.display = menu.style.display === "none" ? "block" : "none";
-});
-
-document.getElementById('intervalBtn').addEventListener('click', function() {
-  var menu = document.getElementById('durationInterval');
-  menu.style.display = menu.style.display === "none" ? "block" : "none";
-});
-
-document.getElementById('lampButton').addEventListener('click', function() {
-  var menu = document.getElementById('durationLampMenu');
-  // Muestra el menú si está oculto, o lo oculta si ya está visible
-  menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
-});
+// document.getElementById('durationBtn').addEventListener('click', function() {
+//   var menu = document.getElementById('durationAlarm');
+//   menu.style.display = menu.style.display === "none" ? "block" : "none";
+// });
 
 document.addEventListener('DOMContentLoaded', (event) => {
   // Obtener elementos del DOM
@@ -107,50 +54,28 @@ function setTargetTime() {
   xhttp.send("time=" + targetTime);
 }
 
-function sendDurationLamp() {
-  var durationValue = document.getElementById('durationLamp').value;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/setDurationLamp?durationLamp=" + durationValue, true);
-  xhr.send();
-}
+// function sendAlarmDuration() {
+//   var durationValue = document.getElementById('durationTime').value;
+//   var xhr = new XMLHttpRequest();
+//   xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
+//   xhr.send();
+// }
 
-
-function sendAlarmDuration() {
-  var durationValue = document.getElementById('durationTime').value;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
-  xhr.send();
-}
-
-function sendAlarmRepetitive() {
-  var repetitiveValue = document.getElementById('repeatCount').value;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/setAlarmRepeat?repeat=" + repetitiveValue, true);
-  xhr.send();
-}
-
-function sendAlarmInterval() {
-  var intervalValue = document.getElementById('durationRepeatInterval').value;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/setAlarmInterval?interval=" + intervalValue, true);
-  xhr.send();
-}
 
 function setConfigAlarm() {
   setTargetTime();
-  sendAlarmDuration();
-  sendAlarmRepetitive();
-  sendAlarmInterval();
+ // sendAlarmDuration();
+ 
 }
 
 function stopAlarm() {
   fetch('/stopAlarm', {method: 'POST'})
     .then(response => response.text())
     .then(() => {
-      if (alarmAudio) {
-        alarmAudio.pause();
-        alarmAudio.currentTime = 0; // Reinicia el audio
-      }
+      // if (alarmAudio) {
+      //   alarmAudio.pause();
+      //   alarmAudio.currentTime = 0; // Reinicia el audio
+      // }
     });
 }
 

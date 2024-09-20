@@ -25,6 +25,9 @@ void Lampara::apagar(){
 
 void Lampara::rampa(){
      _valorAnalogico++;
-
+     Serial.println(_valorAnalogico);
      dacWrite(_salida, _valorAnalogico);
+     if(_valorAnalogico >=250){
+          _valorAnalogico = 250;
+     }
 }
