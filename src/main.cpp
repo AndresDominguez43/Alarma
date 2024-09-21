@@ -21,18 +21,17 @@ void loop() {
   timeClient.update();
   
   Alarm();
-
-  retardo(30);
-  if(intervaloAlarma){
+  if (alarmActive) {
+    if(!Lampara1.rampaActiva()){
+          Lampara1.iniciarRampa(durationInMillis); 
+    }
+      }else {
+          Lampara1.apagar();
+      }
+  intervaloAlarma = 0;
   if (alarmActive){
-    Lampara1.rampa();
-    intervaloAlarma = 0;
-  } else {
-    Lampara1.apagar();
-    intervaloAlarma = 0;
+      Lampara1.rampa();
   }
-  }
-
   notifyClients();
 }
 

@@ -4,9 +4,16 @@
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
+unsigned long previousTime = 0;
+const long interval = 500;
 
 void notifyClients() {
-  ws.textAll(timeClient.getFormattedTime());
+  unsigned long currentTime = millis();
+  if(currentTime - previousTime >interval){
+    previousTime = currentTime;
+    ws.textAll(timeClient.getFormattedTime());
+  }
+  
 }
 
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {

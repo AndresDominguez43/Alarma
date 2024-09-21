@@ -11,34 +11,30 @@ function initWebSocket() {
 function onMessage(event) {
   var date = new Date();
   document.getElementById('fecha').innerHTML = date.toLocaleDateString();
-  document.getElementById('hora').innerHTML = event.data;
-
-  
+  document.getElementById('hora').innerHTML = event.data; 
 }
 
-
-// document.getElementById('durationBtn').addEventListener('click', function() {
-//   var menu = document.getElementById('durationAlarm');
-//   menu.style.display = menu.style.display === "none" ? "block" : "none";
-// });
+document.getElementById('durationBtn').addEventListener('click', function() {
+  var menu = document.getElementById('durationAlarm');
+  if (menu.style.display === "none") {
+      menu.style.display = "block";
+  } else {
+      menu.style.display = "none";
+  }
+});
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  // Obtener elementos del DOM
   const popup = document.getElementById('popup');
   const openPopupBtn = document.getElementById('openPopupBtn');
   const closeBtn = document.querySelector('.close-btn');
 
-  // Abrir el popup al hacer clic en el botón
   openPopupBtn.addEventListener('click', () => {
     popup.style.display = 'block';
   });
-
-  // Cerrar el popup al hacer clic en el botón de cerrar
   closeBtn.addEventListener('click', () => {
     popup.style.display = 'none';
   });
 
-  // Cerrar el popup si se hace clic fuera del contenido del popup
   window.addEventListener('click', (event) => {
     if (event.target === popup) {
       popup.style.display = 'none';
@@ -54,28 +50,23 @@ function setTargetTime() {
   xhttp.send("time=" + targetTime);
 }
 
-// function sendAlarmDuration() {
-//   var durationValue = document.getElementById('durationTime').value;
-//   var xhr = new XMLHttpRequest();
-//   xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
-//   xhr.send();
-// }
+function sendAlarmDuration() {
+  var durationValue = document.getElementById('durationTime').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/setAlarmDuration?duration=" + durationValue, true);
+  xhr.send();
+}
 
 
 function setConfigAlarm() {
   setTargetTime();
- // sendAlarmDuration();
- 
+  sendAlarmDuration();
 }
 
 function stopAlarm() {
   fetch('/stopAlarm', {method: 'POST'})
     .then(response => response.text())
     .then(() => {
-      // if (alarmAudio) {
-      //   alarmAudio.pause();
-      //   alarmAudio.currentTime = 0; // Reinicia el audio
-      // }
     });
 }
 
