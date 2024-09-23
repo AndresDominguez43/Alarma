@@ -5,7 +5,10 @@
 DNSServer dnsServer;
 WiFiManager wm;
 
-void startMDNS(const char* hostname){
+const char* APSSID = "PortalCautivo";
+const char* APPASSWORD = "proyecto123";
+
+void configureMDNS(const char* hostname){
   if(!MDNS.begin(hostname)){
     Serial.println("Error al configurar MDNS");
     return;
@@ -14,15 +17,15 @@ void startMDNS(const char* hostname){
   Serial.println("http://" + String(hostname) + ".local");
 }
 
-void initWiFiPortal(){
-  
+
+void setupWiFiPortal(){
   //wm.resetSettings();
-  bool res = wm.autoConnect("PortalCautivo", "proyecto123");
-  if(!res){
+  bool wifiConnected = wm.autoConnect(APSSID, APPASSWORD);
+  if(!wifiConnected){
     Serial.println("No se pudo conectar a WiFi");
     ESP.restart();
   } else{
     Serial.print("Conectado a WiFi");
-    startMDNS("Alarma");
+    configureMDNS("Alarma");
   }
 }

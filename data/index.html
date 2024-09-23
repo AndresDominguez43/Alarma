@@ -30,12 +30,9 @@
             
                 <div class="popup-content">
                     <span class="close-btn"></span>  
-                    <input type="time" id="targetTime" placeholder="HH:MM..." class="handleSetTime"/>
-
-                    <button class = "set" onclick="setConfigAlarm()">Set</button>  
-                    <button id="durationBtn">Duracion</button> 
+                    <input type="time" id="alarmTime" placeholder="HH:MM..." class="handleSetTime"/>
+                    <button class = "durationBtn" id="durationBtn">Duracion</button> 
                     <div id="durationAlarm" class="durationPopup" style="display: none;">
-                        <label for="durationTime">Duración: </label>
                         <select id="durationTime" class="handleSetTime">
                             <option value="5">5 minutos</option>
                             <option value="10">10 minutos</option>
@@ -43,7 +40,7 @@
                             <option value="30">30 minutos</option>
                         </select>
                     </div> 
-                    
+                <button class = "set" onclick="setConfigAlarm()">Set</button>
             </div>
             </div>
         <h3>Clima</h3>

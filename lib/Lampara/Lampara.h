@@ -8,7 +8,6 @@ class Lampara{
 
     public:
         Lampara(int salida);
-        void encender();
         void apagar();
         void rampa();
         void iniciarRampa(unsigned long duracion);

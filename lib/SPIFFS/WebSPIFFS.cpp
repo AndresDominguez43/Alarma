@@ -13,7 +13,7 @@ void saveValueToSPIFFS(const char* filename, String value) {
   Serial.println("Guardado en" + String(filename) + ": " + value);
 }
 
-String readValue(const char* filename, String resetValue) {
+String readValueFromSPIFFS(const char* filename, String resetValue) {
   File file = SPIFFS.open(filename, FILE_READ);
   if (!file) {
     Serial.println("Error al abrir el archivo para leer: " + String(filename ));
@@ -31,8 +31,8 @@ if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
-  targetTime = readValue("/targetTime.txt", "00:00");
-  durationStr = readValue("/alarmDuration.txt", "00:00"); 
+  alarmTime = readValueFromSPIFFS("/alarmTime.txt", "00:00");
+  durationStr = readValueFromSPIFFS("/alarmDuration.txt", "No leido"); 
   
   File file = SPIFFS.open("/index.html");
   if(!file){
@@ -56,6 +56,7 @@ if(!SPIFFS.begin(true)){
   server.on("/stopAlarm", HTTP_POST, handleStopAlarm);
   server.on("/set-time",HTTP_POST,handleSetTime);
   server.on("/setAlarmDuration", HTTP_GET, handleSetAlarmDuration);
+
 
   server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(SPIFFS, "/favicon.ico", "image/x-icon"); 

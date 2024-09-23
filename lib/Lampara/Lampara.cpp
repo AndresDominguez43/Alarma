@@ -8,11 +8,6 @@ Lampara::Lampara(int salida) {
     _rampaActiva = false;
 }
 
-void Lampara::encender() {
-    _valorAnalogico = 4095;
-    dacWrite(_salida, _valorAnalogico);
-}
-
 void Lampara::apagar() {
     _valorAnalogico = 0;
     dacWrite(_salida, _valorAnalogico);
@@ -29,16 +24,16 @@ void Lampara::rampa() {
     unsigned long tiempoTranscurrido = millis() - _startTime1;
 
     if (tiempoTranscurrido < _duracionRampa) {
-      _valorAnalogico = map(tiempoTranscurrido, 0, _duracionRampa,0, 255);
+      _valorAnalogico = map(tiempoTranscurrido, 0, _duracionRampa,110, 255);
+        if(_valorAnalogico>=255){
+        _valorAnalogico = 255;
+      }
+      }
       dacWrite(_salida, _valorAnalogico);
       Serial.print("Valor Analógico: ");
       Serial.println(_valorAnalogico);
-    } else {
-      _valorAnalogico = 255;
-      dacWrite(_salida, _valorAnalogico);
-      _rampaActiva = false;
+      
     }
-  }
 }
 
 bool Lampara::rampaActiva(){

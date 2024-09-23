@@ -2,15 +2,15 @@
 #define Alarm_h
 #include <NTPClient.h>  
 #include <WiFiUdp.h>
-#include "WebSocket.h"
+#include "WebSocketServer.h"
 #include <string.h>
 
 extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
-extern String targetTime;
+extern String alarmTime;
 extern String durationStr;
-extern bool intervaloAlarma;
-extern bool alarmActive;
+extern bool stateAlarm;
+extern bool initRamp;
 const int LIGHTPIN = 2;
 void ConfigPin();
 void Alarm();

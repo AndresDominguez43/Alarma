@@ -1,6 +1,5 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
-var alarmAudio = document.getElementById('alarmAudio');
 
 function initWebSocket() {
   console.log('Trying to open a WebSocket connection...');
@@ -42,12 +41,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
-function setTargetTime() {
-  var targetTime = document.getElementById('targetTime').value;
+function setAlarmTime() {
+  var alarmTime = document.getElementById('alarmTime').value;
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/set-time", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("time=" + targetTime);
+  xhttp.send("time=" + alarmTime);
 }
 
 function sendAlarmDuration() {
@@ -59,7 +58,7 @@ function sendAlarmDuration() {
 
 
 function setConfigAlarm() {
-  setTargetTime();
+  setAlarmTime();
   sendAlarmDuration();
 }
 
