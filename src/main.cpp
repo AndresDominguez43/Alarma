@@ -19,6 +19,7 @@ void setup() {
 void loop() {
   ws.cleanupClients();
   timeClient.update();
+  
   Alarm();
   if (initRamp) {
     if(!Lampara1.rampaActiva()){
